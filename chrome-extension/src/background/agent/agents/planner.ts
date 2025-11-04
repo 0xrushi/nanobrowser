@@ -84,6 +84,18 @@ export class PlannerAgent extends BaseAgent<typeof plannerOutputSchema, PlannerO
     } catch (error) {
       // Check if this is an authentication error
       if (isAuthenticationError(error)) {
+        // When DEBUG is enabled, attempt to include endpoint response payload for easier diagnosis
+        if (process.env.DEBUG) {
+          const resp =
+            (error as any)?.response?.data || (error as any)?.cause?.response?.data || (error as any)?.cause?.data;
+          if (resp) {
+            const extra = typeof resp === 'string' ? resp : JSON.stringify(resp);
+            throw new ChatModelAuthError(
+              `Planner API Authentication failed. Please verify your API key\nEndpoint response: ${extra}`,
+              error as any,
+            );
+          }
+        }
         throw new ChatModelAuthError('Planner API Authentication failed. Please verify your API key', error);
       }
       if (isForbiddenError(error)) {

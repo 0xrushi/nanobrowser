@@ -4,12 +4,14 @@ import { Button } from '@extension/ui';
 import { withErrorBoundary, withSuspense } from '@extension/shared';
 import { GeneralSettings } from './components/GeneralSettings';
 import { ModelSettings } from './components/ModelSettings';
+import { TaskBridgeSettings } from './components/TaskBridgeSettings';
 
-type TabTypes = 'general' | 'models' | 'help';
+type TabTypes = 'general' | 'models' | 'bridge' | 'help';
 
 const TABS: { id: TabTypes; icon: string; label: string }[] = [
   { id: 'general', icon: '⚙️', label: 'General' },
   { id: 'models', icon: '📊', label: 'Models' },
+  { id: 'bridge', icon: '🔌', label: 'Bridge' },
   { id: 'help', icon: '📚', label: 'Help' },
 ];
 
@@ -44,6 +46,8 @@ const Options = () => {
         return <GeneralSettings isDarkMode={isDarkMode} />;
       case 'models':
         return <ModelSettings isDarkMode={isDarkMode} />;
+      case 'bridge':
+        return <TaskBridgeSettings isDarkMode={isDarkMode} />;
       default:
         return null;
     }

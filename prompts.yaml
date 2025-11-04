@@ -1,0 +1,16 @@
+# CLI AI Agent YAML config with custom OpenAI-compatible endpoint
+# Run with: pnpm run agent -- --file=prompts.yaml
+
+model: gpt-oss-120b-f16
+baseUrl: https://llms.emberfang.xyz
+apiKey: 1234
+
+# Browser/runtime options
+headful: true
+stealth: true # Enable stealth mode (puppeteer-extra with stealth plugin)
+chrome: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+profile: 'none' #"/Users/bread/Library/Application Support/Google/Chrome/Default"
+noSandbox: true
+
+tasks:
+  - 'Open youtube.com and search taylor swift'

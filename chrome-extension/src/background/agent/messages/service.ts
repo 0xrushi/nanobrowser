@@ -222,6 +222,11 @@ export default class MessageManager {
     for (const m of this.history.messages) {
       totalInputTokens += m.metadata.tokens;
       logger.debug(`${m.message.constructor.name} - Token count: ${m.metadata.tokens}`);
+
+      // Show message content for all message types
+      const content = typeof m.message.content === 'string' ? m.message.content : JSON.stringify(m.message.content);
+      const preview = content.length > 500 ? content.substring(0, 500) + '...' : content;
+      logger.debug(`  Content: ${preview}`);
     }
 
     logger.debug(`Total input tokens: ${totalInputTokens}`);

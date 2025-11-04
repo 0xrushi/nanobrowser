@@ -1,0 +1,24 @@
+{
+  "extends": "./../packages/tsconfig/base.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "baseUrl": "..",
+    "paths": {
+      "@src/background/log": ["cli/shims/log.ts"],
+      "@src/*": ["chrome-extension/src/*"]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": []
+  },
+  "include": [
+    "cli",
+    "chrome-extension/src/background/agent/actions/schemas.ts",
+    "chrome-extension/src/background/agent/types.ts"
+  ],
+  "exclude": []
+}

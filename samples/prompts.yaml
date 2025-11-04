@@ -1,0 +1,87 @@
+# Sample Nanobrowser prompts (YAML)
+#
+# Use with:
+#   npm run agent -- --file=samples/prompts.yaml
+#   pnpm run agent -- --file=samples/prompts.yaml
+#
+model: gpt-oss-120b-f16
+baseUrl: https://llms.emberfang.xyz/v1
+apiKey: '1234'
+
+# Browser/runtime options
+headful: true
+# If needed, set a custom Chrome path (macOS example)
+chrome: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+profile: ~/.nanobrowser-profile
+noSandbox: true
+
+tasks:
+  - |
+    Goal: Sign in to Elsevier via Northeastern University (SSO), complete Duo push approval, and download/view the PDF.
+
+    Variables:
+    - EMAIL = "chaudhari.r"
+    - PASSWORD = "<MANUAL_ENTRY>"  # password will be entered manually by the operator
+    - ORG_NAME = "Northeastern University"
+    - START_URL = "https://www.sciencedirect.com/science/article/abs/pii/S1290072925004326"
+    - DUO_APP_PACKAGE = "com.duosecurity.duomobile"  # Duo Mobile package on mobile MCP
+    - USE_MOBILE_MCP = true  # whether to use mobile MCP to open Duo Mobile
+
+    Plan:
+    1) Open START_URL in a new browser tab.
+
+    2) If a cookie banner appears:
+      - Click the button labeled "Accept all cookies" (or the closest equivalent).
+
+    3) In the top-right corner, locate and click the "Sign in" button.
+
+    4) On the organization sign-in screen:
+      - Find the field for organization/institution.
+      - Type ORG_NAME.
+      - If a dropdown of suggestions appears, select the option that exactly matches ORG_NAME.
+
+    5) Wait for the page to redirect to the Northeastern University login portal.
+
+    6) In the Northeastern login form:
+      - Enter EMAIL into the email/username field.
+      - Click "Next" or continue if required.
+      - **Pause for manual entry:** The automation should now pause and prompt the operator to **enter the PASSWORD manually** into the password field on the page.
+      - After entering the password manually, the operator must **confirm** to the automation (e.g., click a "Continue"/"Resume" button or send the tool a confirmation input).
+      - Once the operator confirms, the automation clicks the "Login" / "Sign in" / "Submit" button.
+
+    7) Multi-factor authentication (Duo) step:
+      - After sign-in, the page will show a button or prompt to send a Duo push. Click the "Send Push" (or equivalent) button on the web page.
+      - On your mobile device (or mobile MCP):
+        - Launch the app with package DUO_APP_PACKAGE (Duo Mobile).
+        - When the Duo authentication notification or in-app approval appears, open the Duo Mobile app and select **Approve** (or tap the push notification to approve).
+        - If the Duo prompt includes an additional auth popup inside the app (e.g., confirm device, accept prompt), select the appropriate confirm/approve action.
+
+      Notes:
+      - If using mobile MCP automation, ensure it opens the Duo app and brings the push notification into focus.
+      - If a push does not arrive, use Duo's "Call me" or "Enter a passcode" fallback (if available).
+
+    8) Post-MFA: Wait for the web session to confirm successful Duo approval and complete the redirect back to Elsevier.
+
+    9) Accessing the PDF:
+      - On the Elsevier page, locate the link/button to access the article PDF.
+      - If there is a "View PDF" button, click it.
+      - If the PDF is embedded in HTML with a download link, click the "Download PDF" link or use the page's PDF viewer controls to download.
+      - If a checkbox or captcha appears saying "I am human" (or similar), check it and complete any simple/on-site verification (only if it appears).
+
+    10) Verify download/view:
+      - Confirm the PDF either opened in the browser PDF viewer or that the file was downloaded to the default downloads folder.
+      - Optionally capture the PDF filename, size, and current URL for logging.
+
+    Recovery & Robustness:
+    - If ORG_NAME is not found in the dropdown, clear the field, retype slowly, and try again.
+    - If the login button is disabled, ensure both fields are filled and try again.
+    - If authentication fails, capture the error message and stop; do not retry passwords repeatedly.
+    - If the Duo push does not arrive, attempt resend once or use the available fallbacks ("Call me" or passcode).
+    - If the PDF link is behind an additional prompt (consent, terms), accept if required to proceed.
+
+    Success Criteria:
+    - Web session is authenticated on an Elsevier/Northeastern SSO flow (profile icon or "Sign out" visible).
+    - Duo push was approved on the mobile device and web session completed MFA.
+    - The PDF either opened in the browser or was successfully downloaded.
+
+# For reference, you can keep additional tasks under this list as needed.
