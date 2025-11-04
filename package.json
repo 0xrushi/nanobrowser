@@ -24,6 +24,14 @@
   },
   "devDependencies": {
     "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.19.1"
+    "tsx": "^4.19.1",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.5",
+    "eslint": "^8.57.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,yaml,yml,md}": [
+      "prettier --write"
+    ]
   }
 }
